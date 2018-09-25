@@ -3,4 +3,4 @@ Portofolio kanban integrating with firebase and vue cli
 
 # Demo
 
-https://kanban-andre-sudi.firebaseapp.com/
+https://sudi-kanban.firebaseapp.com/

@@ -8,7 +8,7 @@
                     <p class="card-title"><strong>Description: </strong>{{kanban.description}}</p>
                     <p class="card-title"><strong>Point: </strong>{{kanban.point}}</p>
                     <p class="card-text"><strong> To: </strong>{{kanban.assignedTo}}</p>
-                    <div class="card-footer bg-transparent border-light" style="padding: 0px; padding-top: 17px">
+                    <div class="card-footer bg-transparent border-light" style="padding: 0px; padding-top: 17px; margin-bottom: 10px;">
                         <button type="button" class="btn btn-warning" @click="left(kanban)" v-if="kanban.status > 0">&lt;</button>
                         <button type="button" class="btn btn-danger" @click="deleteTask(kanban.id)">x</button>
                         <button type="button" class="btn btn-warning" @click="right(kanban)" v-if="kanban.status < 3">></button>

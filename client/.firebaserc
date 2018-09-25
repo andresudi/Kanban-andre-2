@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "kanban-andre-sudi"
+    "default": "kanban-andre-sudi",
+    "kanvan": "sudi-kanban"
   }
 }
