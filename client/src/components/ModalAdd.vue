@@ -49,14 +49,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["createTask", "getAllTask"]),
+    ...mapActions(["createTask", "getAllTasks"]),
     addTask() {
       this.createTask({
         title: this.title,
         description: this.description,
         point: this.point,
         assignedTo: this.assignedTo,
-        status: "backlog"
+        status: 0
       });
       this.title = "";
       this.description = "";

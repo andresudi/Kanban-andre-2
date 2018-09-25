@@ -6,21 +6,27 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tasks: [],
-    task: '',
-    id: ''
+    allTasks: '',
+    backlogTasks: '',
+    todoTasks: '',
+    doingTasks: '',
+    approvedTasks: ''
   },
   mutations: {
-    GET_TASKS(state, payload) {
-      state.tasks = payload
+    ALL_TASKS(state, payload) {
+      state.allTasks = payload
     },
-
-    GET_ONE(state, payload) {
-      state.task = payload
+    BACKLOG_TASKS(state, payload) {
+      state.backlogTasks = payload
     },
-
-    SET_ID(state, payload) {
-      state.id = payload
+    TODO_TASKS(state, payload) {
+      state.todoTasks = payload
+    },
+    DOING_TASKS(state, payload) {
+      state.doingTasks = payload
+    },
+    APPROVED_TASKS(state, payload) {
+      state.approvedTasks = payload
     }
   },
   actions: {
@@ -28,66 +34,50 @@ export default new Vuex.Store({
       db.ref(`tasks/`).push(payload)
     },
 
-    updateBackLog(context, data) {
-      db.ref(`tasks/${data.id}`).set({
-        title: data.title,
-        description: data.description,
-        point: data.point,
-        assignedTo: data.assignedTo,
-        status: 'backlog'
+    getAllTasks(context, payload) {
+      
+      db.ref('tasks/').on('value', function (snapshot) {
+        let allTasks = snapshot.val()
+        let backlogTasks = []
+        let doingTasks = []
+        let todoTasks = []
+        let approvedTasks = []
+        
+        for (let index in allTasks) {
+          let task = allTasks[index]
+          task.id = index
+          
+          if (task.status === 0) {
+            backlogTasks.push(task)
+          } else if (task.status === 1) {
+            todoTasks.push(task)
+          } else if (task.status === 2) {
+            doingTasks.push(task)
+          } else if (task.status === 3) {
+            approvedTasks.push(task)
+          }
+        }
+        context.commit('ALL_TASKS', allTasks)
+        context.commit('BACKLOG_TASKS', backlogTasks)
+        context.commit('TODO_TASKS', todoTasks)
+        context.commit('DOING_TASKS', doingTasks)
+        context.commit('APPROVED_TASKS', approvedTasks)
       })
     },
 
-    updateToDo(context, data) {
-      db.ref(`tasks/${data.id}`).set({
-        title: data.title,
-        description: data.description,
-        point: data.point,
-        assignedTo: data.assignedTo,
-        status: 'todo'
-      })
+    updateStatus(context, data) {
+      console.log('=====>>>>>', data);
+      
+      if (data.next) {
+        data.task.status--
+      } else {
+        data.task.status++
+      }
+      db.ref(`tasks/${data.task.id}`).set(data.task)
     },
 
-    updateDoing(context, data) {
-      db.ref(`tasks/${data.id}`).set({
-        title: data.title,
-        description: data.description,
-        point: data.point,
-        assignedTo: data.assignedTo,
-        status: 'doing'
-      })
-    },
-
-     updateApproved(context, data) {
-      db.ref(`tasks/${data.id}`).set({
-        title: data.title,
-        description: data.description,
-        point: data.point,
-        assignedTo: data.assignedTo,
-        status: 'approved'
-      })
-     },
-
-    getAllTask(context) {
-      db.ref('tasks/').on('value', function(snapshot) {
-        let tasks = snapshot.val()
-        context.commit('GET_TASKS', tasks) 
-        console.log('ini all task', tasks)
-      })
-    },
-
-    getOneTask(context, id) {
-      console.log('ini',id);
-      db.ref('tasks/' + id).once('value', function(snapshot) {
-        let task = snapshot.val()
-        context.commit('GET_ONE', task) 
-        context.commit('SET_ID', id) 
-        console.log('ini task', task)
-      })
-    },
-
-    removeTask(contest, data) {
-      db.ref('tasks/').child(data).remove()
+    removeTask(contest, payload) {
+      db.ref(`tasks/${payload}`).remove()
     }
   }
 })

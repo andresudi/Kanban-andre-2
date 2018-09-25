@@ -4,40 +4,43 @@
     <br>
     <div class="container">
       <div class="row body">
-        <BackLog :backlog="this.tasks"></BackLog>
-        <Todo :todo="this.tasks"></Todo>
-        <Doing :doing="this.tasks"></Doing>
-        <Approved :approved="this.tasks"></Approved>
+        <KanbanBoard :tasks="backlogTasks" :status= "'Back-Log'"></KanbanBoard>
+        <KanbanBoard :tasks="todoTasks" :status= "'To Do'"></KanbanBoard>
+        <KanbanBoard :tasks="doingTasks" :status= "'Doing'"></KanbanBoard>
+        <KanbanBoard :tasks="approvedTasks" :status= "'Approved'"></KanbanBoard>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Carousel from "@/components/Carousel";
-import BackLog from "@/components/BackLog.vue";
-import Todo from "@/components/Todo";
-import Doing from "@/components/Doing";
-import Approved from "@/components/Approved";
-import { mapActions, mapState } from "vuex";
-export default {
-  name: "home",
-  components: {
-    Carousel,
-    BackLog,
-    Todo,
-    Doing,
-    Approved
-  },
-  methods: {
-    ...mapActions(["getAllTask"])
-  },
-  computed: {
-    ...mapState(["tasks"])
-  },
-  mounted() {
-    this.getAllTask();
-  }
-};
+  // @ is an alias to /src
+  import Carousel from "@/components/Carousel";
+  import KanbanBoard from "@/components/KanbanBoard.vue";
+  import {
+    mapActions,
+    mapState
+  } from "vuex";
+  export default {
+    name: "home",
+    components: {
+      Carousel,
+      KanbanBoard,
+    },
+    methods: {
+      ...mapActions(["getAllTasks"])
+    },
+    computed: {
+      ...mapState({
+        allTasks: 'allTasks',
+        backlogTasks: 'backlogTasks',
+        todoTasks: 'todoTasks',
+        doingTasks: 'doingTasks',
+        approvedTasks: 'approvedTasks'
+      })
+    },
+    mounted() {
+      this.getAllTasks();
+    }
+  };
 </script>
